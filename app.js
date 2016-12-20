@@ -71,7 +71,7 @@ function updateLametric(data, config) {
     let bodyData = {
         frames: [
             {
-                text: `Temp: ${data.temperature}`,
+                text: `${data.temperature} °C`,
                 icon: 'i3253',
                 index: 0
             }
