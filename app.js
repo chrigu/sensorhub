@@ -8,7 +8,8 @@ const express = require('express'),
     jsonfile = require('jsonfile'),
     bodyParser = require('body-parser'),
     request = require('request'),
-    config = require('./config.js');
+    config = require('./config.js'),
+    db = require('./pouch');
 
 const FILE = './data.json';
 
@@ -33,7 +34,14 @@ app.post('/api', function (req, res) {
 
     updateActions(data, config)
 
-    res.status(200).send("cheers");
+    db.addData("temp0", data)
+        .then(function (response) {
+            res.status(200).send("cheers");
+        }).catch(function (err) {
+            res.status(500).send("error");
+        });
+
+    // res.status(200).send("cheers");
     jsonfile.writeFile(FILE, data, function (err) {
         console.error(err)
     })

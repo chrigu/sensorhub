@@ -8,7 +8,8 @@ var config = {
     REMOTE_PORT: 443,
     UPDATE_LAMETRIC: false,
     LAMETRIC_URL: "some.lametric.com",
-    LAMETRIC_KEY: "someky"
+    LAMETRIC_KEY: "someky",
+    COUCHDB: 'http://localhost:5984/sensors'
 };
 
 module.exports = config;
