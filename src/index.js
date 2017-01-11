@@ -2,16 +2,12 @@
  * Created by christiancueni on 13/11/16.
  */
 "use strict";
-
-const express = require('express'), 
-    morgan = require('morgan'), 
-    jsonfile = require('jsonfile'),
-    bodyParser = require('body-parser'),
-    request = require('request'),
-    config = require('./config.js'),
-    db = require('./pouch');
-
-const FILE = './data.json';
+import express from 'express';
+import morgan from 'morgan';
+import bodyParser from 'body-parser';
+import request from 'request';
+import config from './config';
+import db from './pouch';
 
 let app = express();
 
