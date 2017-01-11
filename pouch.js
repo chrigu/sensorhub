@@ -21,6 +21,17 @@ function addData(sensorId, data) {
     return pouch.post(sensorData)
 }
 
+function getAllData() {
+    return     db.allDocs({
+  include_docs: true,
+  attachments: true
+}).then(function (result) {
+  res.send(result)
+}).catch(function (err) {
+  console.log(err);
+});
+}
+
 let db = {
     addData: addData
 }

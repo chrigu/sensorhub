@@ -23,7 +23,8 @@ app.use(morgan('combined'));
 
 app.get('/api', function (req, res) {
     // Todo: use file & jsonparser and pipes
-    res.send(jsonfile.readFileSync(FILE));
+    // res.send(jsonfile.readFileSync(FILE));
+
 });
 
 app.post('/api', function (req, res) {
@@ -41,10 +42,6 @@ app.post('/api', function (req, res) {
             res.status(500).send("error");
         });
 
-    // res.status(200).send("cheers");
-    jsonfile.writeFile(FILE, data, function (err) {
-        console.error(err)
-    })
 });
 
 app.listen(3000, function () {

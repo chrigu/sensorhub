@@ -4,7 +4,7 @@
   "description": "collecting data from a lora network",
   "main": "app.js",
   "scripts": {
-    "start": "node --harmony-async-await app",
+    "start": "node app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Christian Cueni",
