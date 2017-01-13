@@ -1,6 +1,6 @@
 //const
 
-var config = {
+export const config = {
     UPDATE_REMOTE: false,
     REMOTE_PROTOCOL: 'http',
     REMOTE_HOST: 'some.server.com',
@@ -11,5 +11,3 @@ var config = {
     LAMETRIC_KEY: "someky",
     COUCHDB: 'http://localhost:5984/sensors'
 };
-
-module.exports = config;

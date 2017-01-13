@@ -8,6 +8,8 @@ import bodyParser from 'body-parser';
 import request from 'request';
 import config from './config';
 import db from './pouch';
+import { sensorDefinitions } from './sensor.config';
+import _ from 'lodash';
 
 let app = express();
 
@@ -20,29 +22,39 @@ app.use(morgan('combined'));
 app.get('/api', function (req, res) {
     // Todo: use file & jsonparser and pipes
     // res.send(jsonfile.readFileSync(FILE));
-
 });
 
 app.post('/api', function (req, res) {
-    let data = {};
-    if ('temperature' in req.body) {
-        data['temperature'] = +req.body.temperature/100;
+
+    let data = handleIncoming(req.body);
+
+    if (data) {
+        updateActions(data, config);
+        db.addData(data);
+        res.status(200).send("cheers");
+    } else {
+        res.status(422);
     }
-
-    updateActions(data, config)
-
-    db.addData("temp0", data)
-        .then(function (response) {
-            res.status(200).send("cheers");
-        }).catch(function (err) {
-            res.status(500).send("error");
-        });
-
 });
 
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!')
 })
+
+function handleIncoming(data) {
+    // check if valid
+    if ('id' in data && 'data' in data) {
+        let sensorDefinition =  _.find(sensorDefinitions, { id: data['id'] });
+        return {
+            id: data['id'],
+            data: data['data'] * sensorDefinition['data']['multiplier'],
+            unit: sensorDefinition['data']['unit'],
+            type: sensorDefinition['data']['type']
+        };
+    } else {
+        return null;
+    }
+}
 
 function updateActions(data, config) {
 

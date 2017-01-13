@@ -1,6 +1,6 @@
 //const
 
-var config = {
+export const config = {
     UPDATE_REMOTE: false,
     REMOTE_PROTOCOL: 'http',
     REMOTE_HOST: 'homebrew.trivialview.ch',
@@ -11,5 +11,3 @@ var config = {
     LAMETRIC_KEY: "Y2ZlZjNjNDYzYjk0ZWQ2OWU2NWYxMTVkNjQwY2Y0ODg2MmZiNTYxYjhjZjM4OGM5ZWFiZGY2MzZmMGUwYTRiNA==",
     COUCHDB: 'http://localhost:5984/sensors'
 };
-
-module.exports = config;

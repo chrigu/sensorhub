@@ -1,7 +1,7 @@
 "use strict";
 
-let PouchDB = require('pouchdb'),
-    config = require('./config.js');
+import PouchDB from 'pouchdb';
+import { config } from './config';
 
 let pouch = new PouchDB(config.COUCHDB);
 
@@ -9,13 +9,11 @@ pouch.info().then(function (info) {
   console.log(info);
 })
 
-function addData(sensorId, data) {
+function addData(data) {
 
-    let timestamp = Math.floor(Date.now() / 1000);
     let sensorData = {
-        sensor: sensorId,
-        timestamp: timestamp,
-        data: data
+        ...data,
+        timestamp: timestamp
     };
 
     return pouch.post(sensorData)
