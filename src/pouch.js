@@ -20,7 +20,7 @@ function addData(data) {
 }
 
 function getAllData() {
-    return     db.allDocs({
+    return db.allDocs({
   include_docs: true,
   attachments: true
 }).then(function (result) {
