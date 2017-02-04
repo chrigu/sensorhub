@@ -3,36 +3,57 @@
 import PouchDB from 'pouchdb';
 import { config } from './config';
 
-let pouch = new PouchDB(config.COUCHDB);
+let measurements = new PouchDB(config.COUCHDB_MEASUREMENTS);
+let sensors = new PouchDB(config.COUCHDB_SENSORS);
 
-pouch.info().then(function (info) {
+measurements.info().then(function (info) {
   console.log(info);
-})
+});
 
-function addData(data) {
+function addMeasurement(data) {
 
-    let sensorData = {
+    let timestamp = Math.floor(Date.now() / 1000);
+
+    let measurement = {
         ...data,
         timestamp: timestamp
     };
 
-    return pouch.post(sensorData)
+    return measurements.post(measurement)
 }
 
-function getAllData() {
+function getAllMeasurements() {
+    return getAllData(measurements);
+}
+
+function getAllData(db) {
     return db.allDocs({
-  include_docs: true,
-  attachments: true
-}).then(function (result) {
-  res.send(result)
-}).catch(function (err) {
-  console.log(err);
-});
+      include_docs: true,
+      attachments: true
+    }).then(function (result) {
+      return result;
+    }).catch(function (err) {
+      console.log(err);
+    });
+}
+
+function getAllSensors() {
+    return getAllData(sensors);
+}
+
+function addSensor(sensor) {
+
+    return sensors.post(sensor)
+        .then(() => getAllSensors(sensors));
+
 }
 
 let db = {
-    addData: addData
-}
+    addMeasurement: addMeasurement,
+    getAllMeasurements: getAllMeasurements,
+    getAllSensors: getAllSensors,
+    addSensor: addSensor
+};
 
 
-module.exports = db
+module.exports = db;

@@ -9,5 +9,6 @@ export const config = {
     UPDATE_LAMETRIC: false,
     LAMETRIC_URL: "some.lametric.com",
     LAMETRIC_KEY: "someky",
-    COUCHDB: 'http://localhost:5984/sensors'
+    COUCHDB_SENSORS: 'http://localhost:5984/sensors',
+    COUCHDB_MEASUREMENTS: 'http://localhost:5984/measurements'
 };

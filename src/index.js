@@ -19,9 +19,18 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 })); 
 app.use(morgan('combined'));
 
+app.all('/api', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+});
+
 app.get('/api', function (req, res) {
-    // Todo: use file & jsonparser and pipes
-    // res.send(jsonfile.readFileSync(FILE));
+    db.getAllMeasurements().then(function(data) {
+        res.status(200).send(data.rows.map(row => row.doc));
+    }).catch(function(error) {
+        res.status(500, { error: e });
+    });
 });
 
 app.post('/api', function (req, res) {
@@ -30,16 +39,46 @@ app.post('/api', function (req, res) {
 
     if (data) {
         updateActions(data, config);
-        db.addData(data);
+        db.addMeasurement(data);
         res.status(200).send("cheers");
     } else {
         res.status(422);
     }
 });
 
-app.listen(3000, function () {
+// sensors
+app.all('/api/sensors', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    next();
+});
+
+app.get('/api/sensors', function (req, res) {
+    db.getAllSensors().then(function(data) {
+        res.status(200).send(data.rows.map(row => row.doc));
+    }).catch(function(error) {
+        res.status(500, { error: e });
+    });
+});
+
+app.post('/api/sensors', function (req, res) {
+
+
+    if (req.body) {
+        db.addSensor(req.body).then(function(data) {
+            res.status(200).send(data.rows.map(row => row.doc));
+        }).catch(function(error) {
+            res.status(500, { error: e });
+        });
+    } else {
+        res.status(422);
+    }
+});
+
+app.listen(4200, function () {
     console.log('Example app listening on port 3000!')
-})
+});
 
 function handleIncoming(data) {
     // check if valid
@@ -56,11 +95,14 @@ function handleIncoming(data) {
     }
 }
 
+
+// remove...
+
 function updateActions(data, config) {
 
-    if (config.UPDATE_REMOTE) {
-        updateRemote(data, config);
-    }
+    // if (config.UPDATE_REMOTE) {
+    //     updateRemote(data, config);
+    // }
 
     if (config.UPDATE_LAMETRIC) {
         updateLametric(data, config);
@@ -92,11 +134,11 @@ function updateLametric(data, config) {
     };
 
     request({
-            headers: headers,
-            uri: config.LAMETRIC_URL,
-            json: bodyData,
-            method: 'POST'
-        }, (err, res, body) => {
+        headers: headers,
+        uri: config.LAMETRIC_URL,
+        json: bodyData,
+        method: 'POST'
+    }, (err, res, body) => {
         console.error(err)
     });
 }
