@@ -1,6 +1,7 @@
 //const
 
 export const config = {
+    BIND_ADDRESS: '127.0.0.1',
     UPDATE_REMOTE: false,
     REMOTE_PROTOCOL: 'http',
     REMOTE_HOST: 'some.server.com',
