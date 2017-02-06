@@ -4,8 +4,8 @@
 import express from 'express';
 import {addMeasurement, getAllMeasurements} from './db';
 import { config } from '../config';
-import { sensorDefinitions } from '../sensor.config';
-import _ from 'lodash';
+import { getSensor } from '../sensors/db';
+import request from 'request';
 
 let measurements = express.Router();
 
@@ -18,29 +18,34 @@ measurements.get('/', function (req, res) {
 });
 
 measurements.post('/', function (req, res) {
-    let data = handleIncoming(req.body);
-    if (data) {
-        updateActions(data, config);
-        addMeasurement(data);
-        res.status(200).send("cheers");
-    } else {
-        res.status(422);
-    }
+    handleIncoming(req.body)
+        .then((measurements) => {
+            measurements.map((measurement) => {
+                updateActions(measurement, config);
+                addMeasurement(measurement);
+            });
+            return res.status(200).send("cheers");
+        })
+        .catch((error) => {
+            console.log("error", error);
+            return res.status(422);
+        });
 });
+
 
 function handleIncoming(data) {
     // check if valid
-    if ('id' in data && 'data' in data) {
-        let sensorDefinition =  _.find(sensorDefinitions, { id: data['id'] });
-        return {
-            id: data['id'],
-            data: data['data'] * sensorDefinition['data']['multiplier'],
-            unit: sensorDefinition['data']['unit'],
-            type: sensorDefinition['data']['type']
-        };
-    } else {
-        return null;
-    }
+    return getSensor(data['id'])
+        .then((sensors) => {
+            return sensors.map((sensor) => ({
+                id: data['id'],
+                data: data['data'] * sensor.doc.multiplier,
+                unit: sensor.doc.unit,
+                type: sensor.doc.type,
+                raw: data['data']
+            }));
+        })
+        .catch(error => error);
 }
 
 // remove...

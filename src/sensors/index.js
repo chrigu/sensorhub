@@ -17,8 +17,6 @@ sensors.get('/', function (req, res) {
 });
 
 sensors.post('/', function (req, res) {
-
-
     if (req.body) {
         addSensor(req.body).then(function(data) {
             res.status(200).send(data.rows.map(row => row.doc));
@@ -29,5 +27,6 @@ sensors.post('/', function (req, res) {
         res.status(422);
     }
 });
+
 
 export default sensors;

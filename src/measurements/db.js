@@ -8,9 +8,9 @@ import { config } from '../config';
 
 let measurements = new PouchDB(config.COUCHDB_MEASUREMENTS);
 
-measurements.info().then(function (info) {
-    console.log(info);
-});
+// measurements.info().then(function (info) {
+//     console.log(info);
+// });
 
 export function addMeasurement(data) {
 
@@ -20,8 +20,7 @@ export function addMeasurement(data) {
         ...data,
         timestamp: timestamp
     };
-
-    return measurements.post(measurement)
+    return measurements.post(measurement);
 }
 
 export function getAllMeasurements() {
