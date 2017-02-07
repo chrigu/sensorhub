@@ -4,7 +4,9 @@
 import express from 'express';
 import {addMeasurement, getAllMeasurements} from './db';
 import { config } from '../config';
+import request from 'request';
 import { sensorDefinitions } from '../sensor.config';
+import {broadcast} from '../io';
 import _ from 'lodash';
 
 let measurements = express.Router();
@@ -22,6 +24,7 @@ measurements.post('/', function (req, res) {
     if (data) {
         updateActions(data, config);
         addMeasurement(data);
+        broadcast(data);
         res.status(200).send("cheers");
     } else {
         res.status(422);

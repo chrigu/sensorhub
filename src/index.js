@@ -5,12 +5,15 @@
 import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-import request from 'request';
 import { config } from './config';
 import sensors from './sensors';
 import measurements from './measurements';
+import {Server} from 'http';
+import { startSocket } from './io';
 
 let app = express();
+let http = Server(app);
+startSocket(http);
 
 // middleware
 
@@ -35,12 +38,11 @@ app.all('/api/sensors', function(req, res, next) {
     next();
 });
 
-//routes
+// routes
 app.use('/api/sensors', sensors);
 app.use('/api/measurements', measurements);
 
-
-app.listen(4200, config.BIND_ADDRESS, function () {
+http.listen(4200, config.BIND_ADDRESS, function () {
     console.log('Example app listening on port 4200!')
 });
 
